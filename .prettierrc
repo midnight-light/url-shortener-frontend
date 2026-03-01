@@ -3,6 +3,7 @@
   "singleQuote": true,
   "trailingComma": "all",
   "printWidth": 120,
+  "plugins": ["prettier-plugin-tailwindcss"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
