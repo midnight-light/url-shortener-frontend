@@ -3,9 +3,12 @@ import { UrlShortenerForm } from '../features/url-shortener/components/url-short
 function App() {
   return (
     <>
-      <h1>URL Shortener</h1>
-      <p>Welcome to the URL Shortener</p>
-      <UrlShortenerForm />
+      <div className="container-page text-center">
+        <h1>Shortener & Preview</h1>
+        <h2> Your URL</h2>
+        <p>Введи URL для сокращения и получения метаданных ссылки</p>
+        <UrlShortenerForm />
+      </div>
     </>
   );
 }
