@@ -5,9 +5,13 @@ import { ShortenUrlRequestSchema } from '../api/url-shortener.schemas';
 import type { ShortenUrlRequest } from '../api/url-shortener.schemas';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useState } from 'react';
+import { isApiErrorWithStatus } from '../../../app/api/utils/api-error-handler';
 
+interface ErrorState extends Record<string, string> {}
 export const UrlShortenerForm = () => {
   const { mutate, isPending, error } = useShortenUrl();
+  const [errorMessage, setErrorMessage] = useState<ErrorState | null>(null);
 
   const {
     register,
@@ -26,6 +30,11 @@ export const UrlShortenerForm = () => {
   const onSubmit = (data: ShortenUrlRequest) => {
     mutate(data, {
       onSuccess: () => reset(),
+      onError: (error: unknown) => {
+        if (isApiErrorWithStatus(error, 400)) {
+          setErrorMessage({ url: 'Запрещенный URL' });
+        }
+      },
     });
   };
 
@@ -45,7 +54,7 @@ export const UrlShortenerForm = () => {
       </Button>
       {error && (
         <div className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">
-          {error.message || 'Произошла ошибка при обработке запроса'}
+          {errorMessage?.url || 'Произошла ошибка при обработке запроса'}
         </div>
       )}
     </form>

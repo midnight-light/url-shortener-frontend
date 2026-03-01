@@ -5,9 +5,6 @@
 
 import { QueryClient, type DefaultOptions } from '@tanstack/react-query';
 import { handleApiError } from './utils/api-error-handler';
-import { isDevelopment } from '../../shared/utils/feature-flag';
-
-const IS_DEV = isDevelopment();
 
 const queryConfig: DefaultOptions = {
   queries: {
@@ -41,9 +38,7 @@ const queryConfig: DefaultOptions = {
     // global error handling
     onError: (error) => {
       const apiError = handleApiError(error);
-      if (IS_DEV) {
-        console.error('[Mutation Error]:', apiError);
-      }
+      console.error('[Mutation Error]:', apiError);
     },
   },
 };
