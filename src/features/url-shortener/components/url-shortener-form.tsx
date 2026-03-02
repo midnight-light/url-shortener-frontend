@@ -28,8 +28,7 @@ export const UrlShortenerForm = () => {
     },
   });
 
-  const handleOnSuccess = (data: ShortenUrlResponse) => {
-    console.log('data', data);
+  const handleOnSuccess = () => {
     reset();
   };
 
