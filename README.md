@@ -19,6 +19,57 @@ npm run dev
 - Валидация: Zod + React Hook Forms
 - Стили: Tailwind
 
+## Структура проекта
+
+```│
+├── src/
+│   ├── main.tsx                # Точка входа
+│   │
+│   ├── app/                    # App-level конфигурация
+│   │   ├── App.tsx             # Корневой компонент
+│   │   │
+│   │   ├── providers/          # Глобальные провайдеры
+│   │   │   ├── providers-wrapper.tsx
+│   │   │   └── query-provider.tsx
+│   │   │
+│   │   └── api/                # API конфигурация
+│   │       ├── api.config.ts   # Base URL, endpoints
+│   │       ├── api.types.ts    # Shared API types
+│   │       ├── instance.ts     # Axios instance factory
+│   │       ├── interceptors.ts # Request/Response interceptors
+│   │       ├── query-client.ts # TanStack Query config
+│   │       └── utils/
+│   │           └── api-error-handler.ts
+│   │
+│   ├── features/               # Feature modules
+│   │   └── url-shortener/
+│   │       ├── api/
+│   │       │   ├── url-shortener.api.ts      # REST API запросы
+│   │       │   ├── url-shortener.queries.ts  # React Query hooks
+│   │       │   └── url-shortener.schemas.ts  # Zod schemas + types
+│   │       │
+│   │       └── components/
+│   │           ├── url-shortener-form.tsx
+│   │           └── url-card.tsx
+│   │
+│   ├── components/             # Shared UI components
+│   │   ├── ui/                 # UI primitives
+│   │   │   ├── button.tsx
+│   │   │   ├── input.tsx
+│   │   │   └── card.tsx
+│   │   │
+│   │   └── icons/              # SVG icons
+│   │
+│   ├── shared/                 # Shared utilities
+│   │   └── utils/
+│   │       └── feature-flag.ts
+│   │
+│   ├── utils/                  # Common utilities
+│   │   └── cn.ts               # className merger
+│   │
+│   └── index.css               # Global styles + Tailwind
+```
+
 ### Валидация через Zod схемы
 
 ```ts
