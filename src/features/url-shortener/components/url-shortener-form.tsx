@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useShortenUrl } from '../api/url-shortener.queries';
 import { ShortenUrlRequestSchema } from '../api/url-shortener.schemas';
-import type { ShortenUrlRequest, ShortenUrlResponse } from '../api/url-shortener.schemas';
+import type { ShortenUrlRequest } from '../api/url-shortener.schemas';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
