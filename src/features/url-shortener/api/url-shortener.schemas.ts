@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const ShortenUrlRequestSchema = z.object({
-  url: z.string().url('Invalid URL format'),
+  url: z.string().url('Неверный формат URL'),
   forceRefresh: z.boolean().optional(),
 });
 

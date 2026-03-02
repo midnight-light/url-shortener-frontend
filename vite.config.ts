@@ -18,7 +18,7 @@ export default defineConfig({
     },
   },
   esbuild: {
-    drop: ['console', 'debugger'], // removed console and debugger in production
+    drop: process.env.MODE === 'production' ? ['console', 'debugger'] : [],
   },
   // optimizations
   build: {

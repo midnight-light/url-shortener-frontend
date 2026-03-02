@@ -1,26 +1,83 @@
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useShortenUrl } from '../api/url-shortener.queries';
+import { ShortenUrlRequestSchema } from '../api/url-shortener.schemas';
+import type { ShortenUrlRequest, ShortenUrlResponse } from '../api/url-shortener.schemas';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
+import { isApiErrorWithStatus } from '../../../app/api/utils/api-error-handler';
+import { UrlCard } from './url-card';
 
+interface ErrorState extends Record<string, string> {}
 export const UrlShortenerForm = () => {
-  const { mutate, isPending } = useShortenUrl();
+  const { mutate, isPending, error, data, reset: resetShortenUrl } = useShortenUrl();
+  const [errorMessage, setErrorMessage] = useState<ErrorState | null>(null);
 
-  const [url, setUrl] = useState<string>('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ShortenUrlRequest>({
+    resolver: zodResolver(ShortenUrlRequestSchema),
+    mode: 'onChange',
+    defaultValues: {
+      url: '',
+      forceRefresh: false,
+    },
+  });
 
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(e.target.value);
+  const handleOnSuccess = (data: ShortenUrlResponse) => {
+    console.log('data', data);
+    reset();
   };
 
-  const handleSubmit = (url: string) => {
-    mutate({ url });
+  const onSubmit = (data: ShortenUrlRequest) => {
+    mutate(data, {
+      onSuccess: handleOnSuccess,
+      onError: (error: unknown) => {
+        if (isApiErrorWithStatus(error, 400)) {
+          setErrorMessage({ url: 'Запрещенный URL' });
+        }
+      },
+    });
   };
+
+  if (data) {
+    return (
+      <div className="mx-auto max-w-xs md:max-w-md">
+        <UrlCard
+          data={data}
+          onCopy={(url) => console.log('Copied:', url)}
+          onVisit={(url) => console.log('Visiting:', url)}
+          onBack={() => resetShortenUrl()}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center justify-center gap-4">
-      <input className="input" onChange={handleUrlChange} value={url} />
-      <Button onClick={() => handleSubmit(url)} disabled={isPending} isLoading={isPending}>
+    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto flex max-w-md flex-col gap-4" noValidate>
+      <Input
+        label="URL для сокращения"
+        type="url"
+        placeholder="https://example.com"
+        error={errors.url?.message}
+        disabled={isPending}
+        {...register('url')}
+      />
+
+      <Button type="submit" disabled={isPending} isLoading={isPending} className="w-full">
         Получить карточку
       </Button>
-    </div>
+      {error && (
+        <div className="rounded-md bg-red-50 p-3 text-sm text-red-800" role="alert">
+          {errorMessage?.url || 'Произошла ошибка при обработке запроса'}
+        </div>
+      )}
+    </form>
   );
 };
+
+UrlShortenerForm.displayName = 'UrlShortenerForm';
